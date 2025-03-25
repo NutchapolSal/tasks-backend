@@ -1,36 +1,27 @@
-import { Column, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
 @Table({
-  tableName: 'customer',
-  timestamps: false,
+  tableName: 'user',
 })
-export class Customer extends Model {
+export class User extends Model {
   @Column({
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
     primaryKey: true,
-    autoIncrement: true,
+    allowNull: false,
   })
-  idcust: number;
+  userId: string;
 
   @Column({
-    type: 'TEXT',
+    type: DataType.TEXT,
+    unique: true,
+    allowNull: false,
   })
-  custname: string;
+  email: string;
 
   @Column({
-    type: 'TEXT',
+    type: DataType.TEXT,
+    allowNull: false,
   })
-  @Column
-  sex: string;
-
-  @Column({
-    type: 'TEXT',
-  })
-  @Column
-  address: string;
-
-  @Column({
-    type: 'TEXT',
-  })
-  @Column
-  tel: string;
+  password: string;
 }
