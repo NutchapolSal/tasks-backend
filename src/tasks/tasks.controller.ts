@@ -46,7 +46,11 @@ export class TasksController {
     @Body() taskBody: UpdateTaskDto,
     @Request() req,
   ) {
-    return await this.tasksService.updateTask(req.user.sub, id, taskBody);
+    const task = await this.tasksService.updateTask(req.user.sub, id, taskBody);
+    if (task == null) {
+      throw new NotFoundException();
+    }
+    return task;
   }
   @Delete(':id')
   async deleteTask(@Param('id') id: string, @Request() req) {
