@@ -18,8 +18,15 @@ export class TasksService {
     });
   }
 
-  async getTask(taskId: string) {
-    return await this.tasksRepository.findByPk(taskId);
+  async getTask(userId: string, taskId: string) {
+    const task = await this.tasksRepository.findByPk(taskId);
+    if (task == null) {
+      return null;
+    }
+    if (task.userId !== userId) {
+      return null;
+    }
+    return task;
   }
 
   async createTask(userId: string, taskBody: CreateTaskDto) {
@@ -30,18 +37,23 @@ export class TasksService {
     });
   }
 
-  async updateTask(taskId: string, taskBody: UpdateTaskDto) {
+  async updateTask(userId: string, taskId: string, taskBody: UpdateTaskDto) {
     const task = await this.tasksRepository.findByPk(taskId);
     if (!task) {
       return null;
     }
+    if (task.userId !== userId) {
+      return null;
+    }
+
     return await task.update(taskBody);
   }
 
-  async deleteTask(taskId: string) {
+  async deleteTask(userId: string, taskId: string) {
     return await this.tasksRepository.destroy({
       where: {
         taskId,
+        userId,
       },
     });
   }
