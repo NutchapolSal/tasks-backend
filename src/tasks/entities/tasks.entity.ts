@@ -43,7 +43,4 @@ export class Task extends Model {
     allowNull: false,
   })
   userId: string;
-
-  @BelongsTo(() => User)
-  user: User;
 }
