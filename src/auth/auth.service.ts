@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
+import { AccessTokenDto } from './dto/accessToken.dto';
 
 @Injectable()
 export class AuthService {
@@ -20,10 +21,7 @@ export class AuthService {
     });
   }
 
-  async signIn(
-    email: string,
-    rawPassword: string,
-  ): Promise<{ accessToken: string }> {
+  async signIn(email: string, rawPassword: string): Promise<AccessTokenDto> {
     const user = await this.usersService.getUserByEmail(email);
     if (user == null) {
       throw new UnauthorizedException();
@@ -39,7 +37,7 @@ export class AuthService {
     return { accessToken: await this.jwtService.signAsync(payload) };
   }
 
-  async signUp(email: string, rawPassword: string) {
+  async signUp(email: string, rawPassword: string): Promise<AccessTokenDto> {
     const user = await this.usersService.getUserByEmail(email);
     if (user != null) {
       throw new UnauthorizedException();
@@ -50,7 +48,7 @@ export class AuthService {
     return { accessToken: await this.jwtService.signAsync(payload) };
   }
 
-  async refreshJWT(userId: string, email: string) {
+  async refreshJWT(userId: string, email: string): Promise<AccessTokenDto> {
     const user = await this.usersService.getUser(userId);
     if (user == null) {
       throw new UnauthorizedException();

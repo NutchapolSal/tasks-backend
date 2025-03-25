@@ -20,21 +20,21 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('accesstoken')
-  signIn(@Body() authDto: AuthDto) {
-    return this.authService.signIn(authDto.email, authDto.rawPassword);
+  async signIn(@Body() authDto: AuthDto) {
+    return await this.authService.signIn(authDto.email, authDto.rawPassword);
   }
   @HttpCode(HttpStatus.OK)
   @Post('user')
-  signUp(@Body() authDto: AuthDto) {
-    return this.authService.signUp(authDto.email, authDto.rawPassword);
+  async signUp(@Body() authDto: AuthDto) {
+    return await this.authService.signUp(authDto.email, authDto.rawPassword);
   }
 
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @Get('accesstoken')
-  getNewAccessToken(@Request() req) {
-    return this.authService.refreshJWT(req.user.sub, req.user.email);
+  async getNewAccessToken(@Request() req) {
+    return await this.authService.refreshJWT(req.user.sub, req.user.email);
   }
 
   @ApiBearerAuth()
