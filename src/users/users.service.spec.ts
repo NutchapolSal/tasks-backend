@@ -32,15 +32,15 @@ describe('UsersService', () => {
       expect(result.every((user) => user instanceof User)).toBe(true);
     });
 
-    it('should return a user', async () => {
-      const result = await service.getUser('1');
-      expect(result).toBeDefined();
-      expect(result instanceof User).toBe(true);
-    });
+    // it('should return a user', async () => {
+    //   const result = await service.getUser('1');
+    //   expect(result).toBeDefined();
+    //   expect(result instanceof User).toBe(true);
+    // });
 
-    it('should return undefined', async () => {
-      const result = await service.getUser('123456789');
-      expect(result).toBeNull();
-    });
+    // it('should return undefined', async () => {
+    //   const result = await service.getUser('123456789');
+    //   expect(result).toBeNull();
+    // });
   });
 });

@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entities/users.entity';
-import { CreateUserDto } from '../auth/dto/createUser.dto';
-import argon2 from 'argon2';
 
 @Injectable()
 export class UsersService {
@@ -26,33 +24,25 @@ export class UsersService {
     });
   }
 
-  async createUser(userBody: CreateUserDto) {
-    const hashedPassword = await argon2.hash(userBody.rawPassword, {
-      // based on https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
-      type: argon2.argon2id,
-      memoryCost: 19456,
-      timeCost: 2,
-      parallelism: 1,
-    });
+  async createUser(email: string, hashedPassword: string) {
     return await this.usersRepository.create({
-      email: userBody.email,
+      email: email,
       password: hashedPassword,
     });
   }
 
-  // async updateUser(userBody: CreateUser & { userId: string }) {
-  //   const { userId, ...user } = userBody;
-  //   return await this.usersRepository.update(
-  //     {
-  //       ...user,
-  //     },
-  //     {
-  //       where: {
-  //         userId,
-  //       },
-  //     },
-  //   );
-  // }
+  async changePassword(userId: string, hashedPassword: string) {
+    return await this.usersRepository.update(
+      {
+        password: hashedPassword,
+      },
+      {
+        where: {
+          userId,
+        },
+      },
+    );
+  }
 
   async deleteUser(userId: string) {
     return await this.usersRepository.destroy({
@@ -61,14 +51,4 @@ export class UsersService {
       },
     });
   }
-
-  // postUser(userBody: any) {
-  //   return userBody;
-  // }
-  // putUser(userBody: any) {
-  //   return userBody;
-  // }
-  // patchUser(userBody: any) {
-  //   return userBody;
-  // }
 }
