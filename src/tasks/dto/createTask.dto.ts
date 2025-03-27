@@ -1,6 +1,6 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { TaskStatus } from '../TaskStatus';
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateTaskDto {
   @IsString()
@@ -8,8 +8,9 @@ export class CreateTaskDto {
   title: string;
 
   @IsString()
-  @IsOptional()
-  @ApiPropertyOptional()
+  @ApiProperty({
+    description: 'Description of the task, can be empty',
+  })
   description: string;
 
   @IsEnum(TaskStatus)
