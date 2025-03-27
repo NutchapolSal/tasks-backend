@@ -51,4 +51,17 @@ export class UsersService {
       },
     });
   }
+
+  async clearAllSessions(userId: string) {
+    return await this.usersRepository.update(
+      {
+        lastSessionClear: new Date(),
+      },
+      {
+        where: {
+          userId,
+        },
+      },
+    );
+  }
 }

@@ -24,4 +24,11 @@ export class User extends Model {
     allowNull: false,
   })
   password: string;
+
+  @Column({
+    type: DataType.DATE,
+    defaultValue: DataType.NOW,
+    allowNull: false,
+  })
+  lastSessionClear: Date;
 }

@@ -8,11 +8,13 @@ import {
   Post,
   UseGuards,
   Get,
+  Patch,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import { AuthGuard } from './auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { ChangePasswordDto } from './dto/changePassword.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -34,7 +36,22 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Get('accesstoken')
   async getNewAccessToken(@Request() req) {
-    return await this.authService.refreshJWT(req.user.sub, req.user.email);
+    return await this.authService.refreshJWT(
+      req.user.sub,
+      req.user.email,
+      req.user.issuedAt,
+    );
+  }
+
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete('accesstoken')
+  async clearAllSessions(@Request() req) {
+    return await this.authService.clearAllSessions(
+      req.user.sub,
+      req.user.issuedAt,
+    );
   }
 
   @ApiBearerAuth()
@@ -43,5 +60,18 @@ export class AuthController {
   @Delete('user')
   async deleteUser(@Request() req) {
     await this.authService.deleteUser(req.user.sub);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Patch('user')
+  async changePassword(@Request() req, @Body() dto: ChangePasswordDto) {
+    await this.authService.changePassword(
+      req.user.sub,
+      req.user.issuedAt,
+      dto.rawOldPassword,
+      dto.rawNewPassword,
+    );
   }
 }

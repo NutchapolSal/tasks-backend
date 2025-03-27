@@ -48,9 +48,16 @@ export class AuthService {
     return { accessToken: await this.jwtService.signAsync(payload) };
   }
 
-  async refreshJWT(userId: string, email: string): Promise<AccessTokenDto> {
+  async refreshJWT(
+    userId: string,
+    email: string,
+    requestJWTIssuedAt: Date,
+  ): Promise<AccessTokenDto> {
     const user = await this.usersService.getUser(userId);
     if (user == null) {
+      throw new UnauthorizedException();
+    }
+    if (requestJWTIssuedAt < user.lastSessionClear) {
       throw new UnauthorizedException();
     }
 
@@ -60,5 +67,37 @@ export class AuthService {
 
   async deleteUser(userId: string) {
     await this.usersService.deleteUser(userId);
+  }
+
+  async clearAllSessions(userId: string, requestJWTIssuedAt: Date) {
+    const user = await this.usersService.getUser(userId);
+    if (user == null) {
+      throw new UnauthorizedException();
+    }
+    if (requestJWTIssuedAt < user.lastSessionClear) {
+      throw new UnauthorizedException();
+    }
+    await this.usersService.clearAllSessions(userId);
+  }
+
+  async changePassword(
+    userId: string,
+    requestJWTIssuedAt: Date,
+    rawOldPassword: string,
+    rawNewPassword: string,
+  ) {
+    const user = await this.usersService.getUser(userId);
+    if (user == null) {
+      throw new UnauthorizedException();
+    }
+    if (requestJWTIssuedAt < user.lastSessionClear) {
+      throw new UnauthorizedException();
+    }
+    const valid = await argon2.verify(user.password, rawOldPassword);
+    if (!valid) {
+      throw new UnauthorizedException();
+    }
+    const hashedPassword = await this.hashPassword(rawNewPassword);
+    await this.usersService.changePassword(userId, hashedPassword);
   }
 }
