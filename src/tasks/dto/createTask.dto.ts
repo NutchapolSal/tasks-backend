@@ -1,5 +1,6 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { TaskStatus } from '../TaskStatus';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateTaskDto {
   @IsString()
@@ -8,6 +9,7 @@ export class CreateTaskDto {
 
   @IsString()
   @IsOptional()
+  @ApiPropertyOptional()
   description: string;
 
   @IsEnum(TaskStatus)

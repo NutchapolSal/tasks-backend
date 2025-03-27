@@ -8,6 +8,7 @@ import {
 } from 'sequelize-typescript';
 import { User } from 'src/users/entities/users.entity';
 import { TaskStatus } from '../TaskStatus';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 @Table({
   tableName: 'task',
@@ -28,6 +29,7 @@ export class Task extends Model {
   title: string;
 
   @Column(DataType.TEXT)
+  @ApiPropertyOptional()
   description: string;
 
   @Column({
