@@ -1,9 +1,11 @@
 import {
   Column,
+  CreatedAt,
   DataType,
   ForeignKey,
   Model,
   Table,
+  UpdatedAt,
 } from 'sequelize-typescript';
 import { User } from 'src/users/entities/users.entity';
 import { TaskStatus } from '../TaskStatus';
@@ -45,4 +47,10 @@ export class Task extends Model {
     allowNull: false,
   })
   userId: string;
+
+  @CreatedAt
+  createdAt: Date;
+
+  @UpdatedAt
+  updatedAt: Date;
 }

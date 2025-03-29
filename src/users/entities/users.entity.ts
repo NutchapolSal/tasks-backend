@@ -1,4 +1,11 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  Column,
+  CreatedAt,
+  DataType,
+  Model,
+  Table,
+  UpdatedAt,
+} from 'sequelize-typescript';
 
 @Table({
   tableName: 'user',
@@ -31,4 +38,10 @@ export class User extends Model {
     allowNull: false,
   })
   lastSessionClear: Date;
+
+  @CreatedAt
+  createdAt: Date;
+
+  @UpdatedAt
+  updatedAt: Date;
 }
