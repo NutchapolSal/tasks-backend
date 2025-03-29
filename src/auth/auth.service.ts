@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
@@ -112,6 +116,10 @@ export class AuthService {
     }
     if (requestJWTIssuedAt < user.lastSessionClear) {
       throw new UnauthorizedException();
+    }
+    const existingUser = await this.usersService.getUserByEmail(newEmail);
+    if (existingUser != null) {
+      throw new ForbiddenException();
     }
     await this.usersService.changeEmail(userId, newEmail);
   }
