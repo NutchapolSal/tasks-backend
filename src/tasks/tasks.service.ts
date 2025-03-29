@@ -15,6 +15,7 @@ export class TasksService {
       where: {
         userId,
       },
+      order: [['createdAt', 'ASC']],
     });
   }
 
