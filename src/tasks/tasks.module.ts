@@ -8,8 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     SequelizeModule.forFeature([Task]),
-    // WHY DO I NEED TO IMPORT JWT MODULE HERE?
-    // CAN'T auth.guard.ts USE THE JWT MODULE IMPORTED IN auth.module.ts??
+    // for auth.guard
     JwtModule.registerAsync({
       useFactory: () => ({
         global: true,
