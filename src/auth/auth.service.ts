@@ -99,7 +99,7 @@ export class AuthService {
     }
     const valid = await argon2.verify(user.password, rawOldPassword);
     if (!valid) {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
     const hashedPassword = await this.hashPassword(rawNewPassword);
     await this.usersService.changePassword(userId, hashedPassword);
