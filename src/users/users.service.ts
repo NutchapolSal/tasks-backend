@@ -44,6 +44,19 @@ export class UsersService {
     );
   }
 
+  async changeEmail(userId: string, newEmail: string) {
+    return await this.usersRepository.update(
+      {
+        email: newEmail,
+      },
+      {
+        where: {
+          userId,
+        },
+      },
+    );
+  }
+
   async deleteUser(userId: string) {
     return await this.usersRepository.destroy({
       where: {

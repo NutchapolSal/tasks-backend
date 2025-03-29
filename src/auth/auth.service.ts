@@ -100,4 +100,19 @@ export class AuthService {
     const hashedPassword = await this.hashPassword(rawNewPassword);
     await this.usersService.changePassword(userId, hashedPassword);
   }
+
+  async changeEmail(
+    userId: string,
+    requestJWTIssuedAt: Date,
+    newEmail: string,
+  ) {
+    const user = await this.usersService.getUser(userId);
+    if (user == null) {
+      throw new UnauthorizedException();
+    }
+    if (requestJWTIssuedAt < user.lastSessionClear) {
+      throw new UnauthorizedException();
+    }
+    await this.usersService.changeEmail(userId, newEmail);
+  }
 }

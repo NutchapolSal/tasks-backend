@@ -14,7 +14,7 @@ import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
 import { AuthGuard } from './auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { ChangePasswordDto } from './dto/changePassword.dto';
+import { UserPatchDto } from './dto/userPatch.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -66,12 +66,22 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Patch('user')
-  async changePassword(@Request() req, @Body() dto: ChangePasswordDto) {
-    await this.authService.changePassword(
-      req.user.sub,
-      req.user.issuedAt,
-      dto.rawOldPassword,
-      dto.rawNewPassword,
-    );
+  async patchUser(@Request() req, @Body() dto: UserPatchDto) {
+    if (dto.rawOldPassword != null && dto.rawNewPassword != null) {
+      await this.authService.changePassword(
+        req.user.sub,
+        req.user.issuedAt,
+        dto.rawOldPassword,
+        dto.rawNewPassword,
+      );
+    }
+
+    if (dto.email != null) {
+      await this.authService.changeEmail(
+        req.user.sub,
+        req.user.issuedAt,
+        dto.email,
+      );
+    }
   }
 }
