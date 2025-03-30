@@ -7,7 +7,7 @@ import {
   Table,
   UpdatedAt,
 } from 'sequelize-typescript';
-import { User } from 'src/users/entities/users.entity';
+import { User } from '../../users/entities/users.entity';
 import { TaskStatus } from '../TaskStatus';
 
 @Table({
