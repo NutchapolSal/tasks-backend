@@ -34,6 +34,7 @@ export class TasksService {
     return await this.tasksRepository.create({
       title: taskBody.title,
       description: taskBody.description,
+      status: taskBody.status,
       userId: userId,
     });
   }
